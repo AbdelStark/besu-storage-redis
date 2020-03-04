@@ -5,6 +5,7 @@ import io.lettuce.core.RedisURI;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.codec.ByteArrayCodec;
+import org.apache.commons.codec.binary.Hex;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hyperledger.besu.plugin.services.exception.StorageException;
@@ -12,6 +13,7 @@ import org.hyperledger.besu.plugin.services.storage.KeyValueStorage;
 import org.hyperledger.besu.plugin.services.storage.KeyValueStorageTransaction;
 import tech.pegasys.plus.plugin.redis.config.RedisStorageOptions;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -31,6 +33,8 @@ public class RedisKeyValueStorage implements KeyValueStorage {
   private void connect() {
     connection = redisClient.connect(new ByteArrayCodec());
     commands = connection.sync();
+    /*final List<byte[]> keys = commands.scan().getKeys();
+    keys.forEach(key -> LOG.info("Key: {}", Hex.encodeHexString(key)));*/
     LOG.info("Successfully connected to redis.");
   }
 
