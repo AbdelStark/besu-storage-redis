@@ -3,6 +3,8 @@ package tech.pegasys.plus.plugin.redis.core;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisURI;
 import io.lettuce.core.api.StatefulRedisConnection;
+import io.lettuce.core.api.sync.RedisCommands;
+import io.lettuce.core.codec.ByteArrayCodec;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hyperledger.besu.plugin.services.exception.StorageException;
@@ -18,7 +20,8 @@ public class RedisKeyValueStorage implements KeyValueStorage {
   private static Logger LOG = LogManager.getLogger();
 
   private final RedisClient redisClient;
-  private StatefulRedisConnection<String, String> connection;
+  private StatefulRedisConnection<byte[], byte[]> connection;
+  private RedisCommands<byte[], byte[]> commands;
 
   public RedisKeyValueStorage(final RedisClient redisClient) {
     this.redisClient = redisClient;
@@ -26,7 +29,8 @@ public class RedisKeyValueStorage implements KeyValueStorage {
   }
 
   private void connect() {
-    connection = redisClient.connect();
+    connection = redisClient.connect(new ByteArrayCodec());
+    commands = connection.sync();
     LOG.info("Successfully connected to redis.");
   }
 
@@ -44,12 +48,12 @@ public class RedisKeyValueStorage implements KeyValueStorage {
 
   @Override
   public boolean containsKey(final byte[] key) throws StorageException {
-    return false;
+    return get(key).isPresent();
   }
 
   @Override
   public Optional<byte[]> get(final byte[] key) throws StorageException {
-    return Optional.empty();
+    return Optional.ofNullable(commands.get(key));
   }
 
   @Override
@@ -64,7 +68,7 @@ public class RedisKeyValueStorage implements KeyValueStorage {
 
   @Override
   public KeyValueStorageTransaction startTransaction() throws StorageException {
-    return null;
+    return new RedisTransaction(commands);
   }
 
   @Override

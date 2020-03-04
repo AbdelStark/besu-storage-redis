@@ -9,6 +9,7 @@ import org.hyperledger.besu.plugin.services.storage.KeyValueStorageFactory;
 import org.hyperledger.besu.plugin.services.storage.SegmentIdentifier;
 import tech.pegasys.plus.plugin.redis.config.RedisStorageOptions;
 
+import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Builder
@@ -29,6 +30,7 @@ public class RedisKeyValueStorageFactory implements KeyValueStorageFactory {
       final MetricsSystem metricsSystem)
       throws StorageException {
     return RedisKeyValueStorage.fromConfig(segmentCounter.getAndIncrement(), options);
+    // return RedisKeyValueStorage.fromConfig(Arrays.hashCode(segment.getId()), options);
   }
 
   @Override
