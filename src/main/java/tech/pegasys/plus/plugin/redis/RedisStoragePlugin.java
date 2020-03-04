@@ -34,9 +34,9 @@ public class RedisStoragePlugin implements BesuPlugin {
         .ifPresentOrElse(
             this::handleCLIOptions, () -> LOG.error("Could not obtain PicoCLIOptions service."));
     context
-            .getService(StorageService.class)
-            .ifPresentOrElse(
-                    this::createAndRegister, () -> LOG.error("Could not obtain Storage service."));
+        .getService(StorageService.class)
+        .ifPresentOrElse(
+            this::createAndRegister, () -> LOG.error("Could not obtain Storage service."));
   }
 
   private void handleCLIOptions(final PicoCLIOptions cmdLineOptions) {
