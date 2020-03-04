@@ -6,8 +6,10 @@ import org.apache.logging.log4j.Logger;
 import org.hyperledger.besu.plugin.BesuContext;
 import org.hyperledger.besu.plugin.BesuPlugin;
 import org.hyperledger.besu.plugin.services.PicoCLIOptions;
-import picocli.CommandLine;
-import tech.pegasys.plus.plugin.redis.core.RedisStorageClient;
+import org.hyperledger.besu.plugin.services.StorageService;
+import org.hyperledger.besu.plugin.services.storage.KeyValueStorageFactory;
+import tech.pegasys.plus.plugin.redis.config.RedisStorageOptions;
+import tech.pegasys.plus.plugin.redis.core.RedisKeyValueStorageFactory;
 
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -19,28 +21,37 @@ public class RedisStoragePlugin implements BesuPlugin {
   private static Logger LOG = LogManager.getLogger();
   private static String PLUGIN_NAME = "redis-storage";
 
-  @CommandLine.Option(names = "--plugin-redis-storage-uri")
-  public String redisURI = RedisStorageClient.DEFAULT_URI;
+  private BesuContext context;
+  private final RedisStorageOptions options = RedisStorageOptions.builder().build();
+  private KeyValueStorageFactory factory;
 
   @Override
   public void register(final BesuContext context) {
     LOG.info("Registering plugin {}.", PLUGIN_NAME);
+    this.context = context;
     context
         .getService(PicoCLIOptions.class)
         .ifPresentOrElse(
             this::handleCLIOptions, () -> LOG.error("Could not obtain PicoCLIOptions service."));
   }
 
-  private void handleCLIOptions(final PicoCLIOptions picoCLIOptions) {
-    picoCLIOptions.addPicoCLIOptions(PLUGIN_NAME, this);
+  private void handleCLIOptions(final PicoCLIOptions cmdLineOptions) {
+    cmdLineOptions.addPicoCLIOptions(PLUGIN_NAME, options);
   }
 
   @Override
   public void start() {
     LOG.info("Starting plugin {}.", PLUGIN_NAME);
-    final RedisStorageClient redisStorageClient =
-        RedisStorageClient.builder().uri(redisURI).build();
-    LOG.info(redisStorageClient.toString());
+    LOG.info(options.toString());
+    context
+        .getService(StorageService.class)
+        .ifPresentOrElse(
+            this::createAndRegister, () -> LOG.error("Could not obtain Storage service."));
+  }
+
+  private void createAndRegister(final StorageService service) {
+    factory = RedisKeyValueStorageFactory.builder().options(options).build();
+    service.registerKeyValueStorage(factory);
   }
 
   @Override

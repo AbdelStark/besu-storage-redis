@@ -3,5 +3,5 @@
 ## Usage
 
 ```shell script
-./test.sh --plugin-redis-storage-uri="redis://localhost:6379/0"
+./test.sh --plugin-redis-storage-host=localhost --plugin-redis-storage-port=6379
 ```
