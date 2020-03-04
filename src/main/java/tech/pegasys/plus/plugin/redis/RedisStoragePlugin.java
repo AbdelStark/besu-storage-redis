@@ -33,6 +33,10 @@ public class RedisStoragePlugin implements BesuPlugin {
         .getService(PicoCLIOptions.class)
         .ifPresentOrElse(
             this::handleCLIOptions, () -> LOG.error("Could not obtain PicoCLIOptions service."));
+    context
+            .getService(StorageService.class)
+            .ifPresentOrElse(
+                    this::createAndRegister, () -> LOG.error("Could not obtain Storage service."));
   }
 
   private void handleCLIOptions(final PicoCLIOptions cmdLineOptions) {
@@ -43,14 +47,11 @@ public class RedisStoragePlugin implements BesuPlugin {
   public void start() {
     LOG.info("Starting plugin {}.", PLUGIN_NAME);
     LOG.info(options.toString());
-    context
-        .getService(StorageService.class)
-        .ifPresentOrElse(
-            this::createAndRegister, () -> LOG.error("Could not obtain Storage service."));
   }
 
   private void createAndRegister(final StorageService service) {
     factory = RedisKeyValueStorageFactory.builder().options(options).build();
+    LOG.info("Registering redis key value storage factory");
     service.registerKeyValueStorage(factory);
   }
 
