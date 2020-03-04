@@ -1,14 +1,30 @@
-.gradle
-/build/
-
-# Ignore Gradle GUI config
-gradle-app.setting
-
-# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
-!gradle-wrapper.jar
-
-# Cache of project
-.gradletasknamecache
-
-# # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
-# gradle/wrapper/gradle-wrapper.properties
+*.bak
+*.swp
+*.tmp
+*~.nib
+*.iml
+*.launch
+*.swp
+*.log
+.classpath
+.DS_Store
+.externalToolBuilders/
+.gradle/
+.idea/
+.loadpath
+.metadata
+.prefs
+.project
+.recommenders/
+.settings
+.springBeans
+.vertx
+bin/
+local.properties
+target/
+tmp/
+build/
+out/
+site/
+/kubernetes/reports/
+/kubernetes/besu-*.tar.gz
