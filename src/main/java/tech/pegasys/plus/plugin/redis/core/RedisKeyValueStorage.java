@@ -1,5 +1,7 @@
 package tech.pegasys.plus.plugin.redis.core;
 
+import com.google.common.collect.Sets;
+import io.lettuce.core.KeyScanCursor;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisURI;
 import io.lettuce.core.api.StatefulRedisConnection;
@@ -12,8 +14,10 @@ import org.hyperledger.besu.plugin.services.storage.KeyValueStorage;
 import org.hyperledger.besu.plugin.services.storage.KeyValueStorageTransaction;
 import tech.pegasys.plus.plugin.redis.config.RedisStorageOptions;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class RedisKeyValueStorage implements KeyValueStorage {
@@ -44,7 +48,9 @@ public class RedisKeyValueStorage implements KeyValueStorage {
   }
 
   @Override
-  public void clear() throws StorageException {}
+  public void clear() throws StorageException {
+    applyForAllKeys(key -> true, commands::del);
+  }
 
   @Override
   public boolean containsKey(final byte[] key) throws StorageException {
@@ -58,12 +64,14 @@ public class RedisKeyValueStorage implements KeyValueStorage {
 
   @Override
   public long removeAllKeysUnless(final Predicate<byte[]> retainCondition) throws StorageException {
-    return 0;
+    return applyForAllKeys(retainCondition.negate(), commands::del);
   }
 
   @Override
   public Set<byte[]> getAllKeysThat(final Predicate<byte[]> returnCondition) {
-    return null;
+    final Set<byte[]> returnedKeys = Sets.newIdentityHashSet();
+    applyForAllKeys(returnCondition, returnedKeys::add);
+    return returnedKeys;
   }
 
   @Override
@@ -76,5 +84,24 @@ public class RedisKeyValueStorage implements KeyValueStorage {
     LOG.info("Shutting down redis connection.");
     connection.close();
     redisClient.shutdown();
+  }
+
+  private long applyForAllKeys(
+      final Predicate<byte[]> condition, final Consumer<byte[]> keyConsumer) {
+    long removedNodeCounter = 0;
+    KeyScanCursor<byte[]> cursor = commands.scan();
+    while (!cursor.isFinished()) {
+      cursor = commands.scan(cursor);
+      final List<byte[]> keys = cursor.getKeys();
+      if (keys != null) {
+        for (byte[] key : keys) {
+          if (condition.test(key)) {
+            removedNodeCounter++;
+            keyConsumer.accept(key);
+          }
+        }
+      }
+    }
+    return removedNodeCounter;
   }
 }
