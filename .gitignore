@@ -15,6 +15,7 @@
 .metadata
 .prefs
 .project
+data/
 .recommenders/
 .settings
 .springBeans
