@@ -1,5 +1,6 @@
 package tech.pegasys.plus.plugin.redis.core;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Sets;
 import io.lettuce.core.KeyScanCursor;
 import io.lettuce.core.RedisClient;
@@ -32,7 +33,8 @@ public class RedisKeyValueStorage implements KeyValueStorage {
     this.connect();
   }
 
-  private void connect() {
+  @VisibleForTesting
+  void connect() {
     connection = redisClient.connect(new ByteArrayCodec());
     commands = connection.sync();
     LOG.info("Successfully connected to redis.");

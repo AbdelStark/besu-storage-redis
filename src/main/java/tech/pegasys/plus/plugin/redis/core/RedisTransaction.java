@@ -1,13 +1,17 @@
 package tech.pegasys.plus.plugin.redis.core;
 
 import io.lettuce.core.api.sync.RedisCommands;
-import lombok.RequiredArgsConstructor;
 import org.hyperledger.besu.plugin.services.exception.StorageException;
 import org.hyperledger.besu.plugin.services.storage.KeyValueStorageTransaction;
 
-@RequiredArgsConstructor
 public class RedisTransaction implements KeyValueStorageTransaction {
+
   private final RedisCommands<byte[], byte[]> commands;
+
+  public RedisTransaction(final RedisCommands<byte[], byte[]> commands) {
+    this.commands = commands;
+    // commands.multi();
+  }
 
   @Override
   public void put(byte[] key, byte[] value) {
@@ -20,8 +24,15 @@ public class RedisTransaction implements KeyValueStorageTransaction {
   }
 
   @Override
-  public void commit() throws StorageException {}
+  public void commit() throws StorageException {
+    /*final TransactionResult result = commands.exec();
+    if (result.wasDiscarded()) {
+      throw new StorageException("Transaction discarded");
+    }*/
+  }
 
   @Override
-  public void rollback() {}
+  public void rollback() {
+    // commands.discard();
+  }
 }
