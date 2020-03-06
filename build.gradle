@@ -35,7 +35,16 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok:1.18.12'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
     // Use JUnit test framework
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.junit.platform:junit-platform-runner:1.6.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.6.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+
+    testImplementation 'org.assertj:assertj-core:3.15.0'
+    testCompile 'org.mockito:mockito-core:3.3.0'
+    testCompile 'org.mockito:mockito-junit-jupiter:3.3.0'
+    testImplementation 'org.hyperledger.besu:plugin-api:1.4.1-SNAPSHOT'
+
+    testImplementation 'org.mockito:mockito-core'
 }
 
 //create a single Jar with all dependencies
