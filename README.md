@@ -1,5 +1,17 @@
 # Besu Redis Key value store plugin
 
+## Use case
+
+Using a Redis cluster as a storage engine for Besu enables to specify multiple types of Besu nodes depending on the features. This approach would allow us to have optimized nodes for query the database. RocksDB's lock mechanism makes harder to have multiple instances of Besu accessing the same database. Redis on the other hand enables this use case, we can imagine a categorisation of Besu nodes like the following:
+
+- **besu-tx**: Handling of local transaction pool.
+- **besu-sync**: Handling of blockchain synchronisation through Ethereum P2P network. 
+- **besu-query**: Handling of database queries.
+
+## Architecture
+
+![architecture](./src/main/resources/architecture.png)
+
 ## Usage
 
 ### Start Redis server.
