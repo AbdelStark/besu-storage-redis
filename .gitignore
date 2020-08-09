@@ -1,3 +1,7 @@
+*.tar
+*.tar.gz
+*.zip
+*.sig
 *.bak
 *.swp
 *.tmp
