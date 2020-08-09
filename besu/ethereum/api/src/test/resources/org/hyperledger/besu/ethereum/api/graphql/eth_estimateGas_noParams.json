@@ -1,12 +1,12 @@
 {
-  "request" :"{block{ estimateGas(data:{}) }}",
-  "response":{
-    "data" : {
-      "block" : {
-        "estimateGas" : 21000
-      }
-    }
-  },
+	"request": "{block{ estimateGas(data:{}) }}",
+	"response": {
+		"data": {
+			"block": {
+				"estimateGas": 21000
+			}
+		}
+	},
 
-  "statusCode": 200
+	"statusCode": 200
 }

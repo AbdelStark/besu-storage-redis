@@ -6,9 +6,7 @@
       "homesteadBlock": 0,
       "eip150Block": 0,
       "eip150Hash": "0x0000000000000000000000000000000000000000000000000000000000000000",
-      "ibft2": {
-
-      }
+      "ibft2": {}
     },
     "nonce": "0x0",
     "timestamp": "0x5b3c3d18",
@@ -36,7 +34,9 @@
   "blockchain": {
     "nodes": {
       "keys": [
-        {"invalidObj": "0xb295c4242fb40c6e8ac7b831c916846050f191adc560b8098ba6ad513079571ec1be6e5e1a715857a13a91963097962e048c36c5863014b59e8f67ed3f667680"},
+        {
+          "invalidObj": "0xb295c4242fb40c6e8ac7b831c916846050f191adc560b8098ba6ad513079571ec1be6e5e1a715857a13a91963097962e048c36c5863014b59e8f67ed3f667680"
+        },
         "0x6295c4242fb40c6e8ac7b831c916846050f191adc560b8098ba6ad513079571ec1be6e5e1a715857a13a91963097962e048c36c5863014b59e8f67ed3f667680"
       ]
     }

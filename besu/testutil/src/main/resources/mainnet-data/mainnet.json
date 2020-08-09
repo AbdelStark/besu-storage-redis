@@ -11,9 +11,7 @@
     "byzantiumBlock": 4370000,
     "constantinopleBlock": 7280000,
     "constantinopleFixBlock": 7280000,
-    "ethash": {
-
-    }
+    "ethash": {}
   },
   "nonce": "0x42",
   "timestamp": "0x0",

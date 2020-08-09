@@ -10,8 +10,7 @@
     "petersburgBlock": 4939394,
     "istanbulBlock": 6485846,
     "muirGlacierBlock": 7117117,
-    "ethash": {
-    }
+    "ethash": {}
   },
   "nonce": "0x0000000000000042",
   "timestamp": "0x00",
